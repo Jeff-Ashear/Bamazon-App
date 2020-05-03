@@ -15,6 +15,9 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+//go here to continue the above attempt:
+//https://www.codecademy.com/articles/getting-user-input-in-node-js
+
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
