@@ -1,5 +1,5 @@
 const mysql = require("mysql");
-const readline = require("readline");
+const inquirer = require("inquirer");
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -9,14 +9,10 @@ const connection = mysql.createConnection({
     database: "bamazon"
 });
 
-//capture user input during the program 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-//go here to continue the above attempt:
-//https://www.codecademy.com/articles/getting-user-input-in-node-js
+let itemID = 0;
+let desiredQuantity = 0;
+let itemPrice = 0;
+let orderTotal = 0;
 
 connection.connect(function(err) {
     if (err) throw err;
@@ -24,9 +20,58 @@ connection.connect(function(err) {
     connection.query("SELECT * FROM products", function (err, result, fields) {
         if (err) throw err;
         console.table(result);
+        console.log("result length: ", result.length)
+       
+        function userInput1() {
+            inquirer
+                .prompt([{
+                    type: "number",
+                    name: "itemID",
+                    message: "Please enter the Item ID of the product you wish to purchase: "
+                }])
+                .then (response => {
+                    console.log("response: ", response)
+                    console.log("response value: ", response.itemID)
+                    itemID = response.itemID;
+                    console.log("itemID: ", itemID);
+                    if (itemID > result.length) {
+                        console.log("Sorry, no such Item ID exists...");
+                        userInput();
+                    } else {
+                        connection.query("SELECT * FROM products WHERE item_id =" + itemID, function (err, results){
+                            if (err) throw err;
+                            console.log("The item you've chosen is: ")
+                            console.table(results);
+                            userInput2();
+                        });
+                    }
+                })
+        }
+        function userInput2() {
+            inquirer
+                .prompt([{
+                    type: "number",
+                    name: "itemQuantity",
+                    message: "Please enter the quantity of this item you would like to purchase: "
+                }])
+                .then (response => {
+                    console.log("response: ", response)
+                    desiredQuantity = response.itemQuantity;
+                    console.log("desiredQuantity: ", desiredQuantity)
+                    console.log("item id: ", itemID)
+                    connection.query("SELECT stock_quantity FROM products WHERE item_id =" + itemID, function (err, results) {
+                        if (err) throw err;
+                        console.log("quantity results: ", results)
+                        availableQuantity = results.stock_quantity;
+                        console.log("available quantity: ", availableQuantity)
+                    })
+                })
+        }
+        userInput1();
+
+
     });
 
-
-    connection.end();
+    // connection.end();
 });
 

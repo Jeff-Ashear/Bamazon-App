@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Jeff-Ashear/Bamazon-App#readme",
   "dependencies": {
-    "mysql": "^2.18.1"
+    "inquirer": "^7.1.0",
+    "mysql": "^2.18.1",
+    "prompt-sync": "^4.2.0"
   }
 }
