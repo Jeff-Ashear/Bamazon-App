@@ -36,7 +36,7 @@ connection.connect(function(err) {
                     console.log("itemID: ", itemID);
                     if (itemID > result.length) {
                         console.log("Sorry, no such Item ID exists...");
-                        userInput();
+                        userInput1();
                     } else {
                         connection.query("SELECT * FROM products WHERE item_id =" + itemID, function (err, results){
                             if (err) throw err;
