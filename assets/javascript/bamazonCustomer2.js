@@ -68,6 +68,22 @@ connection.connect(function(err) {
                         //check to see if quantity is available. If so calculate a total price:
                         if (desiredQuantity > availableQuantity) {
                             console.log("Sorry, insuficient quantity of this product to complete this sale.");
+                        } else {
+                            console.log("there's plenty of that")
+                            connection.query("SELECT price FROM products WHERE item_id =" + itemID, function (err, results) {
+                                if (err) throw err;
+                                console.log("Price results: ", results)
+                                itemPrice = results[0].price;
+                                console.log("Item price: ", itemPrice)
+                                orderTotal = itemPrice * desiredQuantity;
+                                console.log("order total: ", orderTotal);
+
+                                //update database:
+                                connection.query("INSERT INTO stock_quantity FROM products WHERE item_id =" + itemID, function(err, results) {
+                                    
+                                })
+                            });
+
                         }
                     })
                 })
